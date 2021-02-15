@@ -17,6 +17,9 @@
   const templates = {
     booksList: Handlebars.compile(document.querySelector(select.templateOf.booksList).innerHTML),
   };
+  const menuContainer = document.querySelector(select.containerOf.bookList);
+  const favoriteBooks = [];
+
 
   const render = function () {
     for (let elem of dataSource.books) {
@@ -27,35 +30,32 @@
     }
   };
 
+  function initActions() {
 
-  const favoriteBooks = [];
-  const initActions = function () {
-    // Przygotuj w niej referencję do listy wszystkich elementów .book__image w liście .booksList.
-    const booksList = document.querySelectorAll(select.book.image);
-    for (let elem of booksList) {
-      console.log(elem);
-      elem.addEventListener('dblclick', function (event) {
-        event.preventDefault();
-        const id = elem.getAttribute('data-id');// pobierze z jego data-id identyfikator książki,
-        console.log('id:', id);
-        console.log('fav books', favoriteBooks);
+    menuContainer.addEventListener('dblclick', function (event) {
+      event.preventDefault();
 
+      const elem = event.target.offsetParent;
+      if (elem.classList.contains('book__image')) {
+        const id = elem.getAttribute('data-id');
         if (favoriteBooks.includes(id)) {
-          const indexOfID = favoriteBooks.indexOf(id);
+          const indexOfBookID = favoriteBooks.indexOf(id);
           elem.classList.remove('favorite');
-          favoriteBooks.splice(indexOfID, 1);
-        } else {
-          elem.classList.add('favorite');
-          favoriteBooks.push(id);// i doda ten identy do favoriteBooks.
+          favoriteBooks.splice(indexOfBookID, 1);
         }
-      });
-    }
-  };
+        else {
+          elem.classList.add('favorite');
+          favoriteBooks.push(id);
+        }
+        console.log(favoriteBooks);
+      }
+    });
 
+
+  }
 
   render();
   initActions();
 }
-
 
 
